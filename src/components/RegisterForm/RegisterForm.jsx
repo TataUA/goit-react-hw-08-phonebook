@@ -15,7 +15,7 @@ const schema = yup.object().shape({
     .string()
     .min(2)
     .matches(
-      /^[a-zA-Z][a-zA-Z0-9-_\.]{1,20}$/,
+      /^[a-zA-Z][a-zA-Z0-9-_.]{1,20}$/,
       'The name can only contain letters, numbers, underscores and dash'
     )
     .required(),
@@ -24,7 +24,7 @@ const schema = yup.object().shape({
     .string()
     .min(7)
     .matches(
-      /(?=[#$-/:-?{-~!"^_`\[\]a-zA-Z]*([0-9#$-/:-?{-~!"^_`\[\]]))(?=[#$-/:-?{-~!"^_`\[\]a-zA-Z0-9]*[a-zA-Z])[#$-/:-?{-~!"^_`\[\]a-zA-Z0-9]{7,20}/,
+      /(?=[#$-/:-?{-~!"^_`[\]a-zA-Z]*([0-9#$-/:-?{-~!"^_`[\]]))(?=[#$-/:-?{-~!"^_`[\]a-zA-Z0-9]*[a-zA-Z])[#$-/:-?{-~!"^_`[\]a-zA-Z0-9]{7,20}/,
       'Password can only contain letters, numbers and characters'
     )
     .required(),
