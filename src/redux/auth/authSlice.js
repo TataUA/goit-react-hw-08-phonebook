@@ -11,6 +11,7 @@ const initialState = {
   token: null,
   authentication: false,
   isLoading: false,
+  isRefreshing: true,
   error: null,
 };
 
@@ -63,10 +64,12 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.authentication = true;
         state.userData = payload;
+        state.isRefreshing = false;
       })
       .addCase(currentUserThunk.rejected, (state, { payload }) => {
         state.isLoading = false;
         state.error = payload;
+        state.isRefreshing = false;
       })
 
       //logout

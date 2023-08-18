@@ -1,13 +1,11 @@
 import { lazy, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, Route, Routes } from 'react-router-dom';
+import { selectUserIsRefreshing } from 'redux/auth/authSelectors';
 import { currentUserThunk, logoutUserThunk } from 'redux/auth/authThunk';
 import { SharedLayout } from 'components/SharedLayout/SharedLayout';
-import {
-  selectUserAuthentication,
-  selectUserToken,
-} from 'redux/auth/authSelectors';
 import PrivateRoute from 'components/PrivateRoute/PrivateRoute';
+import { Loader } from 'components/Loader/Loader';
 
 const HomePage = lazy(() => import('pages/HomePage'));
 const RegisterPage = lazy(() => import('pages/RegisterPage'));
@@ -16,17 +14,17 @@ const ContactsPage = lazy(() => import('pages/ContactsPage'));
 
 export const App = () => {
   const dispatch = useDispatch();
-  const token = useSelector(selectUserToken);
-  const authenticated = useSelector(selectUserAuthentication);
+  const isRefreshing = useSelector(selectUserIsRefreshing);
 
   useEffect(() => {
-    if (!token || authenticated) return;
     dispatch(currentUserThunk());
-  }, [token, authenticated, dispatch]);
+  }, [dispatch]);
 
   const handleLogOut = () => {
     dispatch(logoutUserThunk());
   };
+
+  if (isRefreshing) return <Loader />;
 
   return (
     <Routes>

@@ -1,13 +1,14 @@
 import { useDispatch, useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 import { Formik, ErrorMessage } from 'formik';
 import * as yup from 'yup';
 import { selectContacts } from 'redux/contacts/contactsSelectors';
 import { updateContactThunk } from 'redux/contacts/contactsThunk';
 import { setActiveUpdate } from 'redux/contacts/contactsSlice';
 import {
-    Modal,
+  Modal,
   FormContainer,
-  Title, 
+  Title,
   Label,
   Input,
   ErrorValue,
@@ -32,16 +33,12 @@ const schema = yup.object().shape({
     .required(),
 });
 
-const initialValues = {
-  name: '',
-  number: '',
-};
-
-export const UpdateForm = ({id}) => {
+export const UpdateForm = ({ contact }) => {
   const contacts = useSelector(selectContacts);
   const dispatch = useDispatch();
+  const { id, name, number } = contact;
 
-  const handleSubmit = ({name, number }, { resetForm }) => {
+  const handleSubmit = ({ name, number }, { resetForm }) => {
     const isExist = contacts.find(
       contact => contact.name.toLocaleLowerCase() === name.toLowerCase()
     );
@@ -49,32 +46,40 @@ export const UpdateForm = ({id}) => {
       alert(`${name} is already in contacts.`);
       return;
     }
-    dispatch(updateContactThunk({id, name, number }));
+    dispatch(updateContactThunk({ id, name, number }));
     resetForm();
   };
 
   return (
-    <Modal onClick={()=>dispatch(setActiveUpdate(false))}>
-        <Formik
-          initialValues={initialValues}
-          validationSchema={schema}
-          onSubmit={handleSubmit}
-        >
-          <FormContainer autoComplete="off" onClick={e=>e.stopPropagation()}>
-            <Title>Edit contact data</Title>
-            <Label htmlFor="">
-              Name
-              <Input type="text" name="name" placeholder="Rosie Simpson" />
-              <ErrorMessage name="name" component={ErrorValue} />
-            </Label>
-            <Label htmlFor="">
-              Number
-              <Input type="tel" name="number" placeholder="000-000-0000" />
-              <ErrorMessage name="number" component={ErrorValue} />
-            </Label>
-            <Button type="submit">Edit contact</Button>
-          </FormContainer>
-        </Formik>
+    <Modal onClick={() => dispatch(setActiveUpdate(false))}>
+      <Formik
+        initialValues={{ name, number }}
+        validationSchema={schema}
+        onSubmit={handleSubmit}
+      >
+        <FormContainer autoComplete="off" onClick={e => e.stopPropagation()}>
+          <Title>Edit contact data</Title>
+          <Label htmlFor="">
+            Name
+            <Input type="text" name="name" placeholder="Rosie Simpson" />
+            <ErrorMessage name="name" component={ErrorValue} />
+          </Label>
+          <Label htmlFor="">
+            Number
+            <Input type="tel" name="number" placeholder="000-000-0000" />
+            <ErrorMessage name="number" component={ErrorValue} />
+          </Label>
+          <Button type="submit">Edit contact</Button>
+        </FormContainer>
+      </Formik>
     </Modal>
   );
+};
+
+UpdateForm.propTypes = {
+  contact: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    number: PropTypes.string.isRequired,
+  }),
 };

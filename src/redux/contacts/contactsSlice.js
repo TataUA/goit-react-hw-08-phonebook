@@ -61,7 +61,9 @@ const contactsSlice = createSlice({
       .addCase(updateContactThunk.fulfilled, (state, { payload }) => {
         state.isLoading = false;
         state.contacts = state.contacts.map(contact => {
-          if (contact.id === payload.id) return payload;
+          if (contact.id === payload.id) {
+            return payload;
+          }
           return contact;
         });
         state.activeUpdate = false;

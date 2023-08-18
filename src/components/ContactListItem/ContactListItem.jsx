@@ -22,7 +22,7 @@ export const ContactListItem = ({ id, name, number }) => {
         Delete
       </Button>
 
-      {active && <UpdateForm id={id} />}
+      {active && <UpdateForm contact = {{id, name, number}} />}
     </ItemLi>
   );
 };
